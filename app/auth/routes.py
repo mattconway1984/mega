@@ -2,7 +2,7 @@ import flask
 import flask_login
 import werkzeug
 
-from app import app, db
+from app import db
 from app.auth import bp
 from app.auth.forms import (
     LoginForm,

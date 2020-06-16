@@ -1,5 +1,8 @@
-from app import app, db
+from app import db, migrate, login
 from app.models import User, Post
+from app.factory import create_app
+
+app = create_app(db, migrate, login)
 
 @app.shell_context_processor
 def make_shell_context():
@@ -9,4 +12,3 @@ def make_shell_context():
         "User": User,
         "Post": Post,
     }
-

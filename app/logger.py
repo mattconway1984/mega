@@ -2,10 +2,8 @@ import logging
 from logging.handlers import SMTPHandler, RotatingFileHandler
 import os
 
-from app import app
 
-
-def configure_logfile_logger():
+def configure_logfile_logger(app):
     if not os.path.exists("logs"):
         os.mkdir("logs")
     file_handler = RotatingFileHandler(
@@ -20,7 +18,7 @@ def configure_logfile_logger():
     app.logger.info('Website Startup')
 
 
-def configure_email_logger():
+def configure_email_logger(app):
     auth = None
     if app.config["MAIL_USERNAME"] or app.config["MAIL_PASSWORD"]:
         auth = (app.config["MAIL_USERNAME"], app.config["MAIL_PASSWORD"])
@@ -37,8 +35,8 @@ def configure_email_logger():
     app.logger.addHandler(mail_handler)
 
 
-# Only enable logger when not running in debug mode.
-if not app.debug:
-    configure_logfile_logger()
-    if app.config["MAIL_SERVER"]:
-        configure_email_logger()
+def configure_logger(app):
+    if not app.debug:
+        configure_logfile_logger(app)
+        if app.config["MAIL_SERVER"]:
+            configure_email_logger(app)

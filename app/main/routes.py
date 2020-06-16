@@ -3,7 +3,7 @@ import flask
 import flask_login
 import werkzeug
 
-from app import app, db
+from app import db
 from app.main import bp
 from app.main.forms import (
     EditProfileForm,
@@ -32,7 +32,7 @@ def index():
         flask.flash("Your post is now live")
         return flask.redirect(flask.url_for("main.index"))
     page = flask.request.args.get("page", 1, type=int)
-    posts = flask_login.current_user.followed_posts().paginate(page, app.config["POSTS_PER_PAGE"], False)
+    posts = flask_login.current_user.followed_posts().paginate(page, flask.current_app.config["POSTS_PER_PAGE"], False)
     next_url = flask.url_for("main.index", page=posts.next_num) if posts.has_next else None
     prev_url = flask.url_for("main.index", page=posts.prev_num) if posts.has_prev else None
     return flask.render_template("main/index.html", title="Home", form=form, posts=posts.items, next_url=next_url, prev_url=prev_url)
@@ -43,14 +43,14 @@ def index():
 def user(username):
     user = User.query.filter_by(username=username).first_or_404()
     page = flask.request.args.get("page", 1, type=int)
-    posts = user.posts.order_by(Post.timestamp.desc()).paginate(page, app.config["POSTS_PER_PAGE"], False)
+    posts = user.posts.order_by(Post.timestamp.desc()).paginate(page, flask.current_app.config["POSTS_PER_PAGE"], False)
     next_url = flask.url_for("main.user", username=user.username, page=posts.next_num) if posts.has_next else None
     prev_url = flask.url_for("main.user", username=user.username, page=posts.prev_num) if posts.has_prev else None
     form = EmptyForm()
     return flask.render_template("main/user.html", title="My Profile", user=user, posts=posts.items, next_url=next_url, prev_url=prev_url, form=form)
 
 
-@app.route("/edit_profile", methods=["GET", "POST"])
+@bp.route("/edit_profile", methods=["GET", "POST"])
 @flask_login.login_required
 def edit_profile():
     form = EditProfileForm(flask_login.current_user.username)
@@ -113,7 +113,7 @@ def unfollow(username):
 @flask_login.login_required
 def explore():
     page = flask.request.args.get("page", 1, type=int)
-    posts = Post.query.order_by(Post.timestamp.desc()).paginate(page, app.config["POSTS_PER_PAGE"], False)
+    posts = Post.query.order_by(Post.timestamp.desc()).paginate(page, flask.current_app.config["POSTS_PER_PAGE"], False)
     next_url = flask.url_for("main.explore", page=posts.next_num) if posts.has_next else None
     prev_url = flask.url_for("main.explore", page=posts.prev_num) if posts.has_prev else None
     return flask.render_template("main/index.html", title="Explore", posts=posts.items, next_url=next_url, prev_url=prev_url)
