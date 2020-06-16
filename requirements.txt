@@ -1,0 +1,15 @@
+coverage
+email-validator
+guess_language
+flask
+flask-babel
+flask-login
+flask-mail
+flask-migrate
+flask-openid
+flask-sqlalchemy
+flask-whooshalchemy
+flask-wtf
+flipflop
+python-dotenv
+sqlalchemy-migrate
