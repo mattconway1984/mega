@@ -13,14 +13,14 @@
                 <p><a href="{{ url_for('edit_profile') }}">Edit your profile</a></p>
                 {% elif not current_user.is_following(user) %}
                 <p>
-                    <form action="{{ url_for('follow', username=user.username) }}" method="post">
+                    <form action="{{ url_for('main.follow', username=user.username) }}" method="post">
                         {{ form.hidden_tag() }}
                         {{ form.submit(value='Follow') }}
                     </form>
                 </p>
                 {% else %}
                 <p>
-                    <form action="{{ url_for('unfollow', username=user.username) }}" method="post">
+                    <form action="{{ url_for('main.unfollow', username=user.username) }}" method="post">
                         {{ form.hidden_tag() }}
                         {{ form.submit(value='Unfollow') }}
                     </form>
@@ -31,7 +31,7 @@
     </table>
     <hr>
     {% for post in posts %}
-        {% include "_post.html" %}
+        {% include "main/_post.html" %}
     {% endfor %}
     {% if prev_url %}
     <a href="{{ prev_url }}">Older posts</a>
